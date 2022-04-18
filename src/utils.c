@@ -26,7 +26,7 @@ LPBITMAPFILEHEADER readFileHeader(FILE *file) {
 
 void printFileHeader(LPBITMAPFILEHEADER header) {
     printf("BITMAPFILEHEADER:\n");
-    printf("  bfType:\t0x%X\n", header->bfType);
+    printf("  bfType:\t0x%X (%s)\n", header->bfType, (header->bfType == 0x4D42) ? "BM" : "not a BMP\0");
     printf("  bfSize:\t%d\n", header->bfSize);
     printf("  bfReserved1:\t0x%x\n", header->bfReserved1);
     printf("  bfReserved2:\t0x%x\n", header->bfReserved2);
@@ -110,29 +110,22 @@ void freeHist(HISTOGRAM h) {
     } free(h);
 }
 
-void readPixel(HISTOGRAM h, FILE* file) {
-    for(int i = 0; i < NUM_COLORS; i++) {
-        BYTE buffer;
-        fread(&buffer, sizeof(BYTE), 1, file);
-        h[i][buffer/16] += 1;
-    }
-}
 
-void readRow(HISTOGRAM h, LPBITMAPINFOHEADER infoHeader, FILE* file) {
-    for(int i = 0; i < infoHeader->biWidth; i++) {
-        readPixel(h, file);
-    }
-    BYTE buffer;
-    int offset = (infoHeader->biBitCount * infoHeader->biWidth + 31)/32 - infoHeader->biBitCount; //CHANGE BY USING MATH
-    for(int i = 0 ; i < offset; i++) {
-        fread(&buffer, sizeof(BYTE), 1, file);
-    }
-}
 
-void readFile(HISTOGRAM h, LPBITMAPINFOHEADER InfoHeader, FILE* file) {
-    for(int i = 0; i < InfoHeader->biHeight; i++) {
-        readRow(h, InfoHeader, file);
+void fillHist(HISTOGRAM h, LPBITMAPINFOHEADER infoHeader, FILE* file) {
+    int lineSize = ((infoHeader->biBitCount * infoHeader->biWidth + 31)/32)*4;
+    BYTE* buffer = (BYTE*)malloc(sizeof(BYTE)*lineSize);
+    for(int i = 0; i < infoHeader->biHeight; i++) {
+        fread(buffer, sizeof(BYTE), lineSize, file);
+        BYTE pixel;
+        for(int i = 0; i < infoHeader->biWidth; i++) {
+            for(int j = 0; j < NUM_COLORS; j++) {
+                pixel = buffer[3*i+j];
+                h[j][pixel/16] += 1;
+            }
+        }
     }
+    free(buffer);
 }
 
 void printHistogram(HISTOGRAM h, float numPixels) {

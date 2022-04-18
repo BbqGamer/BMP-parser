@@ -1,7 +1,21 @@
-run:
-	g++ utils.c bmp.c -Wall -Wextra -o program
-	./program
+SDIR=src
+ODIR=build
+CC=gcc
+CFLAGS = 
 
-test:
-	g++ utils.c bmp.c -Wall -Wextra -o program
-	valgrind --tool=memcheck --leak-check=yes ./program
+_DEPS = utils.h
+DEPS = $(patsubst %,$(SDIR)/%,$(_DEPS))
+
+_OBJ = bmp.o utils.o
+OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
+
+$(ODIR)/%.o: $(SDIR)/%.c $(DEPS)
+	$(CC) -c -o $@ $< $(CFLAGS)
+
+bin/bmpParser: $(OBJ)
+	$(CC) -o $@ $^ $(CFLAGS)
+
+.PHONY: clean
+
+clean:
+	rm -f build/*.o bin/*

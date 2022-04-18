@@ -1,8 +1,7 @@
 #include "utils.h"
 
-int main() {
+int main(int argc, char* argv[]) {
     //DOKOŃCZYC ARGV
-
 
     FILE *file = fopen("img/c-programming.bmp", "rb");
     LPBITMAPFILEHEADER header = readFileHeader(file);
@@ -12,12 +11,12 @@ int main() {
     printInfoHeader(infoHeader);
 
     HISTOGRAM h = histInit();
-    freeHist(h);
 
     //CREATE HIST
-    readFile(h, infoHeader, file);
+    fillHist(h, infoHeader, file);
     printHistogram(h, infoHeader->biWidth * infoHeader->biHeight);
 
+    freeHist(h);
     free(header);
     free(infoHeader);
     fclose(file);
