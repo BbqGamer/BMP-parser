@@ -20,6 +20,28 @@ int grayscaleProgram(char* inFilename, char* outFilename) {
     writeFileHeader(out, header);
     writeInfoHeader(out, infoHeader);
 
+    fillGrayscale(infoHeader, in, out);
+
     fclose(in);
     fclose(out);
+}
+
+void fillGrayscale(LPBITMAPINFOHEADER infoHeader, FILE* in, FILE* out) {
+    int lineSize = ((infoHeader->biBitCount * infoHeader->biWidth + 31)/32)*4;
+    int sum;
+    BYTE* buffer = (BYTE*)malloc(sizeof(BYTE)*lineSize);
+    for(int i = 0; i < infoHeader->biHeight; i++) {
+        fread(buffer, sizeof(BYTE), lineSize, in);
+        for(int i = 0; i < infoHeader->biWidth; i++) {
+            sum = 0;
+            for(int j = 0; j < NUM_COLORS; j++) {
+                sum += buffer[3*i+j];
+            }
+            for(int j = 0; j < NUM_COLORS; j++) {
+                buffer[3*i+j] = sum/NUM_COLORS;
+            }
+        }
+        fwrite(buffer, sizeof(BYTE), lineSize, out);
+    }
+    free(buffer);
 }

@@ -3,7 +3,6 @@
 
 #include "utils.h"
 
-#define NUM_COLORS 3
 #define NUM_HIST_ROWS 16
 typedef int* COLOR;
 typedef COLOR* HISTOGRAM;

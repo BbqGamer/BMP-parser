@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include <stdint.h>
 
+#define NUM_COLORS 3
+
 //ERROR CODES
 #define FILE_NOT_FOUND -1
 
