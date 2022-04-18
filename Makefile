@@ -3,10 +3,10 @@ ODIR=build
 CC=gcc
 CFLAGS = 
 
-_DEPS = utils.h histogram.h grayscale.h
+_DEPS = utils.h histogram.h grayscale.h steganography.h
 DEPS = $(patsubst %,$(SDIR)/%,$(_DEPS))
 
-_OBJ = bmp.o histogram.o grayscale.o utils.o
+_OBJ = bmp.o histogram.o grayscale.o steganography.o utils.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 $(ODIR)/%.o: $(SDIR)/%.c $(DEPS)

@@ -3,5 +3,6 @@
         "utils.h": "c",
         "fstream": "c",
         "stdint.h": "c"
-    }
+    },
+    "C_Cpp.errorSquiggles": "Disabled"
 }
