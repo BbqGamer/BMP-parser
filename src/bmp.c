@@ -6,6 +6,7 @@
 #define WRONG_NUMBER_OF_ARGUMENTS -2
 
 int main(int argc, char* argv[]) {
+
     if(argc == 2) {
         char c;
         printf("0. Show file stats\n1. Decode steganography\n");
@@ -21,7 +22,8 @@ int main(int argc, char* argv[]) {
     } else if (argc == 4) {
         return encodeSteganography(argv[1], argv[2], argv[3]);
     } else {
-       return WRONG_NUMBER_OF_ARGUMENTS;
+        printf("Wrong number of arguments!");
+        return WRONG_NUMBER_OF_ARGUMENTS;
     }
 
     return 0;

@@ -58,13 +58,13 @@ void encodeMessage(FILE* in, FILE* out, char* message, LPBITMAPINFOHEADER infoHe
 
 void encodeChar(BYTE* buffer, int index, char c) {
     int mask = 0xFE;
-    int bit;
+    char bit;
 
     for(int i = 0; i < 8; i++) {
         bit = c & 1;
 
-        buffer[7-i] = (buffer[7-i] & (mask + bit));
+        buffer[index+i] = (buffer[index+i] & mask) + bit;
 
-        c >> 1;
+        c = c >> 1;
     }
 }
