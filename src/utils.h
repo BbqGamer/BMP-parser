@@ -40,8 +40,10 @@ typedef struct tagBITMAPINFOHEADER {
 
 LPBITMAPFILEHEADER readFileHeader(FILE *file);
 void printFileHeader(LPBITMAPFILEHEADER header);
+void writeFileHeader(FILE* file, LPBITMAPFILEHEADER header);
 
 LPBITMAPINFOHEADER readInfoHeader(FILE *file);
 void printInfoHeader(LPBITMAPINFOHEADER infoHeader);
+void writeInfoHeader(FILE* file, LPBITMAPINFOHEADER infoHeader);
 
 #endif

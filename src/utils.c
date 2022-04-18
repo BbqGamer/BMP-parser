@@ -34,6 +34,16 @@ void printFileHeader(LPBITMAPFILEHEADER header) {
     printf("\n");
 }
 
+void writeFileHeader(FILE* file, LPBITMAPFILEHEADER header) {
+    WORD bufferW;
+    DWORD bufferDW;
+    fwrite(&header->bfType, sizeof(WORD), 1, file);
+    fwrite(&header->bfSize, sizeof(DWORD), 1, file);
+    fwrite(&header->bfReserved1, sizeof(WORD), 1, file);
+    fwrite(&header->bfReserved2, sizeof(WORD), 1, file);
+    fwrite(&header->bfOffBits, sizeof(DWORD), 1, file);
+}
+
 
 LPBITMAPINFOHEADER readInfoHeader(FILE *file) {
     LPBITMAPINFOHEADER infoHeader = (LPBITMAPINFOHEADER)malloc(sizeof(BITMAPINFOHEADER));
@@ -91,4 +101,22 @@ void printInfoHeader(LPBITMAPINFOHEADER infoHeader) {
     printf("  biYPelsPerMeter: %d\n", infoHeader->biYPelsPerMeter);
     printf("  biClrUsed:\t   %d\n", infoHeader->biClrUsed);
     printf("  biClrImportant:  %d\n", infoHeader->biClrImportant);
+}
+
+void writeInfoHeader(FILE* file, LPBITMAPINFOHEADER infoHeader) {
+    WORD bufferW;
+    DWORD bufferDW;
+    LONG bufferL;
+
+    fwrite(&infoHeader->biSize, sizeof(DWORD), 1, file);
+    fwrite(&infoHeader->biWidth, sizeof(LONG), 1, file);
+    fwrite(&infoHeader->biHeight, sizeof(LONG), 1, file);
+    fwrite(&infoHeader->biPlanes, sizeof(WORD), 1, file);
+    fwrite(&infoHeader->biBitCount, sizeof(WORD), 1, file);    
+    fwrite(&infoHeader->biCompression, sizeof(DWORD), 1, file);
+    fwrite(&infoHeader->biSizeImage, sizeof(DWORD), 1, file);
+    fwrite(&infoHeader->biXPelsPerMeter, sizeof(LONG), 1, file);
+    fwrite(&infoHeader->biYPelsPerMeter, sizeof(LONG), 1, file);
+    fwrite(&infoHeader->biClrUsed, sizeof(DWORD), 1, file);
+    fwrite(&infoHeader->biClrImportant, sizeof(DWORD), 1, file);
 }

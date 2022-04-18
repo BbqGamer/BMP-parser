@@ -4,22 +4,21 @@ int histProgram(char* filename) {
     FILE *file = fopen(filename, "rb");
     
     if(file == NULL) {
-        printf("File not found\n");
+        printf("Error opening input file!\n");
         return FILE_NOT_FOUND;
     }
 
     LPBITMAPFILEHEADER header = readFileHeader(file);
-    printFileHeader(header);
-
     LPBITMAPINFOHEADER infoHeader = readInfoHeader(file);
+    printFileHeader(header);
     printInfoHeader(infoHeader);
 
+    //CREATE HISTOGRAM
     HISTOGRAM h = histInit();
-
-    //CREATE HIST
     fillHist(h, infoHeader, file);
     printHistogram(h, infoHeader->biWidth * infoHeader->biHeight);
 
+    //FREE MEMORY AND
     freeHist(h);
     free(header);
     free(infoHeader);
