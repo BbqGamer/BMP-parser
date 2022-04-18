@@ -1,24 +1,16 @@
 #include "utils.h"
+#include "histogram.h"
 
 int main(int argc, char* argv[]) {
-    //DOKOŃCZYC ARGV
+    if(argc == 2) {
+        return histProgram(argv[1]);
+    } else if (argc == 3) {
+        printf("GRAYSCALE");
+    } else if (argc == 4) {
+        printf("ENCODE STEG");
+    } else {
+        printf("Wrong number of arguments");
+    }
 
-    FILE *file = fopen("img/c-programming.bmp", "rb");
-    LPBITMAPFILEHEADER header = readFileHeader(file);
-    printFileHeader(header);
-
-    LPBITMAPINFOHEADER infoHeader = readInfoHeader(file);
-    printInfoHeader(infoHeader);
-
-    HISTOGRAM h = histInit();
-
-    //CREATE HIST
-    fillHist(h, infoHeader, file);
-    printHistogram(h, infoHeader->biWidth * infoHeader->biHeight);
-
-    freeHist(h);
-    free(header);
-    free(infoHeader);
-    fclose(file);
     return 0;
 }

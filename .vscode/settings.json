@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "utils.h": "c",
-        "fstream": "c"
+        "fstream": "c",
+        "stdint.h": "c"
     }
 }

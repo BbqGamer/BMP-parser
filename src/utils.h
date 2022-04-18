@@ -1,7 +1,14 @@
+#ifndef UTILS_H
+#define UTILS_H
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
 
+//ERROR CODES
+#define FILE_NOT_FOUND -1
+
+//STRUCTURES
 typedef uint8_t BYTE;
 typedef uint16_t WORD;
 typedef uint32_t DWORD;
@@ -37,16 +44,4 @@ void printFileHeader(LPBITMAPFILEHEADER header);
 LPBITMAPINFOHEADER readInfoHeader(FILE *file);
 void printInfoHeader(LPBITMAPINFOHEADER infoHeader);
 
-
-//HISTOGRAM RELATED
-#define NUM_COLORS 3
-#define NUM_HIST_ROWS 16
-typedef int* COLOR;
-typedef COLOR* HISTOGRAM;
-
-HISTOGRAM histInit(void);
-void freeHist(HISTOGRAM h);
-void fillHist(HISTOGRAM h, LPBITMAPINFOHEADER InfoHeader, FILE* file);
-#define STEP 256/NUM_HIST_ROWS
-void printHistogram(HISTOGRAM h, float numPixels);
-
+#endif
