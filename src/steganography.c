@@ -5,7 +5,66 @@ int decodeSteganography(char* file) {
     return 0;
 }
 
-int encodeSteganography(char* in, char* out, char* message) {
-    printf("WRITE!");
+int encodeSteganography(char* inFilename, char* outFilename, char* message) {
+    FILE* in = fopen(inFilename, "rb");
+    if(in == NULL) {
+        printf("Error opening input file!");
+        return FILE_NOT_FOUND;
+    }
+
+    FILE* out = fopen(outFilename, "wb");
+    if(out == NULL) {
+        printf("Error opening output file!");
+        fclose(in);
+        return FILE_NOT_FOUND;
+    }
+
+    LPBITMAPFILEHEADER header = readFileHeader(in);
+    LPBITMAPINFOHEADER infoHeader = readInfoHeader(in);
+    writeFileHeader(out, header);
+    writeInfoHeader(out, infoHeader);
+
+    encodeMessage(in, out, message, infoHeader);
+
+    fclose(in);
+    fclose(out);
+
     return 0;
+}
+
+void encodeMessage(FILE* in, FILE* out, char* message, LPBITMAPINFOHEADER infoHeader) {
+    int l = strlen(message);
+    int c = 0;
+
+    int lineSize = ((infoHeader->biBitCount * infoHeader->biWidth + 31)/32)*4;
+    int sum;
+    BYTE* buffer = (BYTE*)malloc(sizeof(BYTE)*lineSize);
+    for(int i = 0; i < infoHeader->biHeight; i++) {
+        if(c >= l) {
+            break;
+        }
+        fread(buffer, sizeof(BYTE), lineSize, in);
+        for(int i = 0; i < infoHeader->biWidth; i+=8) {
+            if(c >= l) {
+                break;
+            }
+            encodeChar(buffer, i, message[c]);
+            c++;
+        }
+        fwrite(buffer, sizeof(BYTE), lineSize, out);
+    }
+    free(buffer);
+}
+
+void encodeChar(BYTE* buffer, int index, char c) {
+    int mask = 0xFE;
+    int bit;
+
+    for(int i = 0; i < 8; i++) {
+        bit = c & 1;
+
+        buffer[7-i] = (buffer[7-i] & (mask + bit));
+
+        c >> 1;
+    }
 }
