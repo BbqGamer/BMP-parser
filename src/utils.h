@@ -61,15 +61,20 @@ typedef struct tagBitmap {
 } BMP;
 
 
+//READING FUNCTIONS
 void readBitmap(FILE* file, BMP* bmpPtr);
-void freeBitmap(BMP* bmpPtr);
-
 void readHeaders(FILE* file, LPBITMAPFILEHEADER fileHeader, LPBITMAPINFOHEADER InfoHeader);
 void readPixels(FILE* file, LPBITMAPFILEHEADER fileHeader, LPBITMAPINFOHEADER infoHeader, BYTE** pixels);
 
-void writeInfoHeader(FILE* file, LPBITMAPINFOHEADER infoHeader);
-void writeFileHeader(FILE* file, LPBITMAPFILEHEADER header);
+//FREEING FUNCTION
+void freeBitmap(BMP* bmpPtr);
 
+//WRITING FUNCTIONS
+void writeBitmap(FILE* file, BMP* bmpPtr);
+void writeHeaders(FILE* file, LPBITMAPFILEHEADER fileHeader, LPBITMAPINFOHEADER infoHeader);
+void writePixels(FILE* file, LPBITMAPFILEHEADER fileHeader, LPBITMAPINFOHEADER infoHeader, BYTE* pixels);
+
+//PRINTING FUNCTIONS
 void printHeaders(BMP* bmpPtr);
 void printFileHeader(LPBITMAPFILEHEADER header);
 void printInfoHeader(LPBITMAPINFOHEADER infoHeader);
