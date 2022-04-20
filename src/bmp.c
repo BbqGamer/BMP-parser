@@ -7,7 +7,9 @@
 
 int main(int argc, char* argv[]) {
 
-    if(argc == 2) {
+    switch (argc)
+    {
+    case 2:
         char c;
         printf("0. Show file stats\n1. Decode steganography\n");
         scanf("%c", &c);
@@ -16,12 +18,14 @@ int main(int argc, char* argv[]) {
         } else if (c == '1') {
             return decodeSteganography(argv[1]);
         }
-        return 0;
-    } else if (argc == 3) {
+
+    case 3:
         return grayscaleProgram(argv[1], argv[2]);
-    } else if (argc == 4) {
+    
+    case 4:
         return encodeSteganography(argv[1], argv[2], argv[3]);
-    } else {
+    
+    default:
         printf("Wrong number of arguments!");
         return WRONG_NUMBER_OF_ARGUMENTS;
     }
