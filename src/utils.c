@@ -1,8 +1,8 @@
 #include "utils.h"
 
-void readHeaders(FILE* file, LPBITMAPFILEHEADER fileHeader, LPBITMAPINFOHEADER readInfoHeader) {
+void readHeaders(FILE* file, LPBITMAPFILEHEADER fileHeader, LPBITMAPINFOHEADER InfoHeader) {
     fread(fileHeader, sizeof(BITMAPFILEHEADER), 1, file);
-    fread(readInfoHeader, sizeof(BITMAPINFOHEADER), 1, file);
+    fread(InfoHeader, sizeof(BITMAPINFOHEADER), 1, file);
 }
 
 void printHeaders(LPBITMAPFILEHEADER fileHeader, LPBITMAPINFOHEADER infoHeader) {
@@ -43,4 +43,21 @@ void writeFileHeader(FILE* file, LPBITMAPFILEHEADER header) {
     fwrite(&header->bfReserved1, sizeof(WORD), 1, file);
     fwrite(&header->bfReserved2, sizeof(WORD), 1, file);
     fwrite(&header->bfOffBits, sizeof(DWORD), 1, file);
+}
+
+BYTE* readPixels(FILE* file, LPBITMAPFILEHEADER fileHeader, LPBITMAPINFOHEADER infoHeader) {
+    DWORD bytesPerPixel = ((DWORD)infoHeader->biBitCount) / 8;
+    int paddedRowSize = (int)(4 * ceil((float)(infoHeader->biHidth) / 4.0f))*bytesPerPixel;
+    int unpaddedRowSize = infoHeader->biWidth * infoHeader->biBitCount;
+    int totalSize = unpaddedRowSize* infoHeader->biHeight;
+    BYTE* pixels = (BYTE*)malloc(totalSize);
+    int i = 0;
+    BYTE* currentRowPointer = *(pixels)+((infoHeader->biHeight-1)*unpaddedRowSize);
+    for (i = 0; i < infoHeader->biHeight; i++)
+    {
+        fseek(file, fileHeader->dataOffset+(i*paddedRowSize), SEEK_SET);
+        fread(currentRowPointer, 1, unpaddedRowSize, file);
+        currentRowPointer -= unpaddedRowSize;
+    }
+    return pixels;
 }

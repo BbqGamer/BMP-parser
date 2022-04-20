@@ -45,7 +45,14 @@ typedef struct tagBITMAPINFOHEADER {
 } BITMAPINFOHEADER, *LPBITMAPINFOHEADER, *PBITMAPINFOHEADER;
 #pragma pack(pop)
 
-void readHeaders(FILE* file, LPBITMAPFILEHEADER fileHeader, LPBITMAPINFOHEADER readInfoHeader);
+typedef struct tagBitmap {
+  BITMAPFILEHEADER fileHeader;
+  BITMAPINFOHEADER infoHeader;
+  BYTE* pixels;
+} Bitmap, *BitmapPtr;
+
+void readHeaders(FILE* file, LPBITMAPFILEHEADER fileHeader, LPBITMAPINFOHEADER InfoHeader);
+BYTE* readPixels(FILE* file, LPBITMAPFILEHEADER fileHeader, LPBITMAPINFOHEADER InfoHeader);
 
 void writeInfoHeader(FILE* file, LPBITMAPINFOHEADER infoHeader);
 void writeFileHeader(FILE* file, LPBITMAPFILEHEADER header);
