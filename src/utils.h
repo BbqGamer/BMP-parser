@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
+#include <math.h>
 
 #define NUM_COLORS 3
 
@@ -46,18 +47,22 @@ typedef struct tagBITMAPINFOHEADER {
 #pragma pack(pop)
 
 typedef struct tagBitmap {
-  BITMAPFILEHEADER fileHeader;
-  BITMAPINFOHEADER infoHeader;
+  LPBITMAPFILEHEADER fileHeader;
+  LPBITMAPINFOHEADER infoHeader;
   BYTE* pixels;
-} Bitmap, *BitmapPtr;
+} BMP;
+
+
+void readBitmap(FILE* file, BMP* bmpPtr);
+void freeBitmap(BMP* bmpPtr);
 
 void readHeaders(FILE* file, LPBITMAPFILEHEADER fileHeader, LPBITMAPINFOHEADER InfoHeader);
-BYTE* readPixels(FILE* file, LPBITMAPFILEHEADER fileHeader, LPBITMAPINFOHEADER InfoHeader);
+void readPixels(FILE* file, LPBITMAPFILEHEADER fileHeader, LPBITMAPINFOHEADER infoHeader, BYTE** pixels);
 
 void writeInfoHeader(FILE* file, LPBITMAPINFOHEADER infoHeader);
 void writeFileHeader(FILE* file, LPBITMAPFILEHEADER header);
 
-void printHeaders(LPBITMAPFILEHEADER fileHeader, LPBITMAPINFOHEADER infoHeader);
+void printHeaders(BMP* bmpPtr);
 void printFileHeader(LPBITMAPFILEHEADER header);
 void printInfoHeader(LPBITMAPINFOHEADER infoHeader);
 
