@@ -20,7 +20,7 @@ int histProgram(char* filename) {
 
     printHistogram(c, bitmap->infoHeader->biWidth * bitmap->infoHeader->biHeight);
 
-    //FREE MEMORY
+    //CLEANUP
     freeCounter(c);
     freeBitmap(bitmap);
     fclose(file);
