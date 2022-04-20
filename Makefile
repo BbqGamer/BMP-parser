@@ -1,7 +1,7 @@
 SDIR=src
 ODIR=build
 CC=gcc
-CFLAGS = 
+CFLAGS = -lm
 
 _DEPS = utils.h histogram.h grayscale.h steganography.h
 DEPS = $(patsubst %,$(SDIR)/%,$(_DEPS))

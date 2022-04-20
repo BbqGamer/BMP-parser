@@ -8,14 +8,19 @@ int histProgram(char* filename) {
         return FILE_NOT_FOUND;
     }
 
+    //READ BITMAP
     BMP* bitmap = (BMP*)malloc(sizeof(BMP));
     readBitmap(file, bitmap);
+    
     printHeaders(bitmap);
 
+    //COUNT COLORS
     COLOR_COUNT* c = counterInit();
     fillCounter(c, bitmap, file);
+
     printHistogram(c, bitmap->infoHeader->biWidth * bitmap->infoHeader->biHeight);
 
+    //FREE MEMORY
     freeCounter(c);
     freeBitmap(bitmap);
     fclose(file);
@@ -59,18 +64,25 @@ void printHistogram(COLOR_COUNT* c, float numPixels) {
         switch (i) { 
         case 0:
             printf("Blue\n");
+            for(int j = 0; j < NUM_HIST_ROWS; j++) {
+                printf("  %d-%d: %.2f\%\n",j*STEP , j*STEP+STEP, (float)(c->b[j])/numPixels*100);
+            }
+            
             break;
         
         case 1:
             printf("Green\n");
+            for(int j = 0; j < NUM_HIST_ROWS; j++) {
+                printf("  %d-%d: %.2f\%\n",j*STEP , j*STEP+STEP, (float)(c->g[j])/numPixels*100);
+            }
             break;
 
         default:
             printf("Red\n");
+            for(int j = 0; j < NUM_HIST_ROWS; j++) {
+                printf("  %d-%d: %.2f\%\n",j*STEP , j*STEP+STEP, (float)(c->r[j])/numPixels*100);
+            }
             break;
-        }
-        for(int j = 0; j < NUM_HIST_ROWS; j++) {
-            printf("  %d-%d: %.2f\%\n",j*STEP , j*STEP+STEP, (float)c->r[j]/numPixels*100);
         }
         printf("\n");
     }
