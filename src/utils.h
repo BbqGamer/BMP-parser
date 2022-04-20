@@ -17,6 +17,7 @@ typedef uint16_t WORD;
 typedef uint32_t DWORD;
 typedef int32_t LONG;
 
+#pragma pack(push, 1)
 // https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapfileheader
 typedef struct tagBITMAPFILEHEADER {
   WORD  bfType;
@@ -25,7 +26,9 @@ typedef struct tagBITMAPFILEHEADER {
   WORD  bfReserved2;
   DWORD bfOffBits;
 } BITMAPFILEHEADER, *LPBITMAPFILEHEADER, *PBITMAPFILEHEADER;
+#pragma pack(pop)
 
+#pragma pack(push, 1)
 // https://docs.microsoft.com/pl-pl/previous-versions/dd183376(v=vs.85)
 typedef struct tagBITMAPINFOHEADER {
   DWORD biSize;
@@ -40,13 +43,16 @@ typedef struct tagBITMAPINFOHEADER {
   DWORD biClrUsed;
   DWORD biClrImportant;
 } BITMAPINFOHEADER, *LPBITMAPINFOHEADER, *PBITMAPINFOHEADER;
+#pragma pack(pop)
 
-LPBITMAPFILEHEADER readFileHeader(FILE *file);
-void printFileHeader(LPBITMAPFILEHEADER header);
+void readHeaders(FILE* file, LPBITMAPFILEHEADER fileHeader, LPBITMAPINFOHEADER readInfoHeader);
+
+void writeInfoHeader(FILE* file, LPBITMAPINFOHEADER infoHeader);
 void writeFileHeader(FILE* file, LPBITMAPFILEHEADER header);
 
-LPBITMAPINFOHEADER readInfoHeader(FILE *file);
+void printHeaders(LPBITMAPFILEHEADER fileHeader, LPBITMAPINFOHEADER infoHeader);
+void printFileHeader(LPBITMAPFILEHEADER header);
 void printInfoHeader(LPBITMAPINFOHEADER infoHeader);
-void writeInfoHeader(FILE* file, LPBITMAPINFOHEADER infoHeader);
+
 
 #endif

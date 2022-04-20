@@ -1,27 +1,13 @@
 #include "utils.h"
 
-LPBITMAPFILEHEADER readFileHeader(FILE *file) {
-    LPBITMAPFILEHEADER header = (LPBITMAPFILEHEADER)malloc(sizeof(BITMAPFILEHEADER));
-    
-    WORD bufferW;
-    DWORD bufferDW;
+void readHeaders(FILE* file, LPBITMAPFILEHEADER fileHeader, LPBITMAPINFOHEADER readInfoHeader) {
+    fread(fileHeader, sizeof(BITMAPFILEHEADER), 1, file);
+    fread(readInfoHeader, sizeof(BITMAPINFOHEADER), 1, file);
+}
 
-    fread(&bufferW, sizeof(WORD), 1, file);
-    header->bfType = bufferW;
-
-    fread(&bufferDW, sizeof(DWORD), 1, file);
-    header->bfSize = bufferDW;
-
-    fread(&bufferW, sizeof(WORD), 1, file);
-    header->bfReserved1 = bufferW;
-
-    fread(&bufferW, sizeof(WORD), 1, file);
-    header->bfReserved2 = bufferW;
-
-    fread(&bufferDW, sizeof(DWORD), 1, file);
-    header->bfOffBits = bufferDW;
-
-    return header;
+void printHeaders(LPBITMAPFILEHEADER fileHeader, LPBITMAPINFOHEADER infoHeader) {
+    printFileHeader(fileHeader);
+    printInfoHeader(infoHeader);
 }
 
 void printFileHeader(LPBITMAPFILEHEADER header) {
@@ -32,60 +18,6 @@ void printFileHeader(LPBITMAPFILEHEADER header) {
     printf("  bfReserved2:\t0x%x\n", header->bfReserved2);
     printf("  bfOffBits:\t%d\n", header->bfOffBits);
     printf("\n");
-}
-
-void writeFileHeader(FILE* file, LPBITMAPFILEHEADER header) {
-    WORD bufferW;
-    DWORD bufferDW;
-    fwrite(&header->bfType, sizeof(WORD), 1, file);
-    fwrite(&header->bfSize, sizeof(DWORD), 1, file);
-    fwrite(&header->bfReserved1, sizeof(WORD), 1, file);
-    fwrite(&header->bfReserved2, sizeof(WORD), 1, file);
-    fwrite(&header->bfOffBits, sizeof(DWORD), 1, file);
-}
-
-
-LPBITMAPINFOHEADER readInfoHeader(FILE *file) {
-    LPBITMAPINFOHEADER infoHeader = (LPBITMAPINFOHEADER)malloc(sizeof(BITMAPINFOHEADER));
-    
-    WORD bufferW;
-    DWORD bufferDW;
-    LONG bufferL;
-
-    fread(&bufferDW, sizeof(DWORD), 1, file);
-    infoHeader->biSize = bufferDW;
-
-    fread(&bufferL, sizeof(LONG), 1, file);
-    infoHeader->biWidth = bufferL;
-
-    fread(&bufferL, sizeof(LONG), 1, file);
-    infoHeader->biHeight = bufferL;
-
-    fread(&bufferW, sizeof(WORD), 1, file);
-    infoHeader->biPlanes = bufferW;
-
-    fread(&bufferW, sizeof(WORD), 1, file);
-    infoHeader->biBitCount = bufferW;
-    
-    fread(&bufferDW, sizeof(DWORD), 1, file);
-    infoHeader->biCompression = bufferDW;
-
-    fread(&bufferDW, sizeof(DWORD), 1, file);
-    infoHeader->biSizeImage = bufferDW;
-
-    fread(&bufferL, sizeof(LONG), 1, file);
-    infoHeader->biXPelsPerMeter = bufferL;
-
-    fread(&bufferL, sizeof(LONG), 1, file);
-    infoHeader->biYPelsPerMeter = bufferL;
-
-    fread(&bufferDW, sizeof(DWORD), 1, file);
-    infoHeader->biClrUsed = bufferDW;
-
-    fread(&bufferDW, sizeof(DWORD), 1, file);
-    infoHeader->biClrImportant = bufferDW;
-
-    return infoHeader;
 }
 
 void printInfoHeader(LPBITMAPINFOHEADER infoHeader) {
@@ -103,20 +35,12 @@ void printInfoHeader(LPBITMAPINFOHEADER infoHeader) {
     printf("  biClrImportant:  %d\n", infoHeader->biClrImportant);
 }
 
-void writeInfoHeader(FILE* file, LPBITMAPINFOHEADER infoHeader) {
+void writeFileHeader(FILE* file, LPBITMAPFILEHEADER header) {
     WORD bufferW;
     DWORD bufferDW;
-    LONG bufferL;
-
-    fwrite(&infoHeader->biSize, sizeof(DWORD), 1, file);
-    fwrite(&infoHeader->biWidth, sizeof(LONG), 1, file);
-    fwrite(&infoHeader->biHeight, sizeof(LONG), 1, file);
-    fwrite(&infoHeader->biPlanes, sizeof(WORD), 1, file);
-    fwrite(&infoHeader->biBitCount, sizeof(WORD), 1, file);    
-    fwrite(&infoHeader->biCompression, sizeof(DWORD), 1, file);
-    fwrite(&infoHeader->biSizeImage, sizeof(DWORD), 1, file);
-    fwrite(&infoHeader->biXPelsPerMeter, sizeof(LONG), 1, file);
-    fwrite(&infoHeader->biYPelsPerMeter, sizeof(LONG), 1, file);
-    fwrite(&infoHeader->biClrUsed, sizeof(DWORD), 1, file);
-    fwrite(&infoHeader->biClrImportant, sizeof(DWORD), 1, file);
+    fwrite(&header->bfType, sizeof(WORD), 1, file);
+    fwrite(&header->bfSize, sizeof(DWORD), 1, file);
+    fwrite(&header->bfReserved1, sizeof(WORD), 1, file);
+    fwrite(&header->bfReserved2, sizeof(WORD), 1, file);
+    fwrite(&header->bfOffBits, sizeof(DWORD), 1, file);
 }

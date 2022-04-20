@@ -8,20 +8,16 @@ int histProgram(char* filename) {
         return FILE_NOT_FOUND;
     }
 
-    LPBITMAPFILEHEADER header = readFileHeader(file);
-    LPBITMAPINFOHEADER infoHeader = readInfoHeader(file);
-    printFileHeader(header);
-    printInfoHeader(infoHeader);
+    BITMAPFILEHEADER header;
+    BITMAPINFOHEADER infoHeader;
+    readHeaders(file, &header, &infoHeader);
+    printHeaders(&header, &infoHeader);
 
-    //CREATE HISTOGRAM
     HISTOGRAM h = histInit();
-    fillHist(h, infoHeader, file);
-    printHistogram(h, infoHeader->biWidth * infoHeader->biHeight);
+    fillHist(h, &infoHeader, file);
+    printHistogram(h, infoHeader.biWidth * infoHeader.biHeight);
 
-    //FREE MEMORY AND
     freeHist(h);
-    free(header);
-    free(infoHeader);
     fclose(file);
 }
 
@@ -40,7 +36,6 @@ void freeHist(HISTOGRAM h) {
         free(h[i]);
     } free(h);
 }
-
 
 
 void fillHist(HISTOGRAM h, LPBITMAPINFOHEADER infoHeader, FILE* file) {
