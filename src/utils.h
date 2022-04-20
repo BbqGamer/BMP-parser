@@ -46,6 +46,14 @@ typedef struct tagBITMAPINFOHEADER {
 } BITMAPINFOHEADER, *LPBITMAPINFOHEADER, *PBITMAPINFOHEADER;
 #pragma pack(pop)
 
+#pragma pack(push, 1)
+typedef struct tagPIXEL {
+  BYTE b;
+  BYTE g;
+  BYTE r;
+} PIXEL;
+#pragma pack(pop)
+
 typedef struct tagBitmap {
   LPBITMAPFILEHEADER fileHeader;
   LPBITMAPINFOHEADER infoHeader;

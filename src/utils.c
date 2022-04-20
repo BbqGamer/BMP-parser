@@ -62,8 +62,8 @@ void writeFileHeader(FILE* file, LPBITMAPFILEHEADER header) {
 void readPixels(FILE* file, LPBITMAPFILEHEADER fileHeader, LPBITMAPINFOHEADER infoHeader, BYTE** pixels) {
     DWORD bytesPerPixel = ((DWORD)infoHeader->biBitCount) / 8;
     int paddedRowSize = (int)(4 * ceil((float)(infoHeader->biWidth) / 4.0f))*bytesPerPixel;
-    int unpaddedRowSize = infoHeader->biWidth * infoHeader->biBitCount;
-    int totalSize = unpaddedRowSize* infoHeader->biHeight;
+    int unpaddedRowSize = infoHeader->biWidth * bytesPerPixel;
+    int totalSize = unpaddedRowSize * infoHeader->biHeight;
     *pixels = (BYTE*)malloc(totalSize);
     int i = 0;
     BYTE* currentRowPointer = *pixels+((infoHeader->biHeight-1)*unpaddedRowSize);

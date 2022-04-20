@@ -8,53 +8,53 @@ int histProgram(char* filename) {
         return FILE_NOT_FOUND;
     }
 
-    BITMAPFILEHEADER header;
-    BITMAPINFOHEADER infoHeader;
-    readHeaders(file, &header, &infoHeader);
-    printHeaders(&header, &infoHeader);
+    BMP* bitmap = (BMP*)malloc(sizeof(BMP));
+    readBitmap(file, bitmap);
+    printHeaders(bitmap);
 
-    HISTOGRAM h = histInit();
-    fillHist(h, &infoHeader, file);
-    printHistogram(h, infoHeader.biWidth * infoHeader.biHeight);
+    COLOR_COUNT* c = counterInit();
+    fillCounter(c, bitmap, file);
+    printHistogram(c, bitmap->infoHeader->biWidth * bitmap->infoHeader->biHeight);
 
-    freeHist(h);
+    freeCounter(c);
+    freeBitmap(bitmap);
     fclose(file);
 }
 
-HISTOGRAM histInit(void) {
-    HISTOGRAM h = (HISTOGRAM)malloc(sizeof(COLOR)*NUM_COLORS);
-    for(int i = 0; i < NUM_COLORS; i++) {
-        h[i] = (COLOR)malloc(sizeof(int)*NUM_HIST_ROWS);
-        for(int j = 0; j < NUM_HIST_ROWS; j++) {
-            h[i][j] = 0;
-        }
-    } return h;
-}
-
-void freeHist(HISTOGRAM h) {
-    for (int i = 0; i < NUM_COLORS; i++) {
-        free(h[i]);
-    } free(h);
-}
-
-
-void fillHist(HISTOGRAM h, LPBITMAPINFOHEADER infoHeader, FILE* file) {
-    int lineSize = ((infoHeader->biBitCount * infoHeader->biWidth + 31)/32)*4;
-    BYTE* buffer = (BYTE*)malloc(sizeof(BYTE)*lineSize);
-    for(int i = 0; i < infoHeader->biHeight; i++) {
-        fread(buffer, sizeof(BYTE), lineSize, file);
-        BYTE pixel;
-        for(int i = 0; i < infoHeader->biWidth; i++) {
-            for(int j = 0; j < NUM_COLORS; j++) {
-                pixel = buffer[3*i+j];
-                h[j][pixel/16] += 1;
-            }
-        }
+COLOR_COUNT* counterInit(void) {
+    COLOR_COUNT* c = (COLOR_COUNT*)malloc(sizeof(COLOR_COUNT));
+    c->r = (int*)malloc(sizeof(int)*NUM_HIST_ROWS);
+    c->g = (int*)malloc(sizeof(int)*NUM_HIST_ROWS);
+    c->b = (int*)malloc(sizeof(int)*NUM_HIST_ROWS);
+    for(int j = 0; j < NUM_HIST_ROWS; j++) {
+        c->r[j] = 0;
+        c->g[j] = 0;
+        c->b[j] = 0;
     }
-    free(buffer);
+    return c;
 }
 
-void printHistogram(HISTOGRAM h, float numPixels) {
+void freeCounter(COLOR_COUNT* c) {
+    free(c->r);
+    free(c->g);
+    free(c->b);
+    free(c);
+}
+
+
+void fillCounter(COLOR_COUNT* c, BMP* bitmap, FILE* file) {
+    BYTE* ptr = bitmap->pixels;
+    for(int i = 0; i < bitmap->infoHeader->biWidth * bitmap->infoHeader->biHeight; i++) {
+        PIXEL pixel;
+        memcpy(&pixel, ptr, sizeof(PIXEL));
+        ptr += sizeof(PIXEL);
+        c->r[pixel.r / STEP]++;
+        c->g[pixel.g / STEP]++;
+        c->b[pixel.b / STEP]++;
+    }
+}
+
+void printHistogram(COLOR_COUNT* c, float numPixels) {
     for(int i = 0; i < NUM_COLORS; i++) {
         switch (i) { 
         case 0:
@@ -70,7 +70,7 @@ void printHistogram(HISTOGRAM h, float numPixels) {
             break;
         }
         for(int j = 0; j < NUM_HIST_ROWS; j++) {
-            printf("  %d-%d: %.2f\%\n",j*STEP , j*STEP+STEP, h[i][j]/numPixels*100);
+            printf("  %d-%d: %.2f\%\n",j*STEP , j*STEP+STEP, (float)c->r[j]/numPixels*100);
         }
         printf("\n");
     }
