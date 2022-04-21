@@ -61,8 +61,7 @@ void writePixels(FILE *file, LPBITMAPFILEHEADER fileHeader, LPBITMAPINFOHEADER i
     int unpaddedRowSize = infoHeader->biWidth * bytesPerPixel;
     fseek(file, fileHeader->bfOffBits, SEEK_SET);
     // READ ONE ROW AND THEN NEXT
-    fwrite(&pixels[(infoHeader->biHeight - 1) * unpaddedRowSize], 1, unpaddedRowSize, file);
-    for (int i = 1; i < infoHeader->biHeight; i++)
+    for (int i = 0; i < infoHeader->biHeight; i++)
     {
         int pixelOffset = ((infoHeader->biHeight - i) - 1) * unpaddedRowSize;
         fwrite(&pixels[pixelOffset], 1, paddedRowSize, file);

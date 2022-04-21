@@ -34,13 +34,13 @@ int grayscaleProgram(char *inFilename, char *outFilename)
 }
 
 void turnToGrayscale(BMP* bitmap) {
-    BYTE *ptr = bitmap->pixels;
+    BYTE *ptr = bitmap->pixels;;
     for (int i = 0; i < bitmap->infoHeader->biWidth * bitmap->infoHeader->biHeight; i++)
     {
         PIXEL pixel;
         memcpy(&pixel, ptr, sizeof(PIXEL));
-        PIXEL newPixel = pixelToGray(pixel); 
-        memcpy(ptr, &newPixel, sizeof(PIXEL));
+        pixel = pixelToGray(pixel); 
+        memcpy(ptr, &pixel, sizeof(PIXEL));
        
         ptr += sizeof(PIXEL);
     }
