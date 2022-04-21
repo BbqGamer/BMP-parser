@@ -21,6 +21,9 @@ int grayscaleProgram(char *inFilename, char *outFilename)
     // READ BITMAP
     BMP *bitmap = (BMP *)malloc(sizeof(BMP));
     readBitmap(in, bitmap);
+
+    turnToGrayscale(bitmap);
+
     writeBitmap(out, bitmap);
 
     // CLEANUP
@@ -30,19 +33,21 @@ int grayscaleProgram(char *inFilename, char *outFilename)
     return 0;
 }
 
-// void fillGrayscale(LPBITMAPINFOHEADER infoHeader, FILE* in, FILE* out) {
-//     int lineSize = ((infoHeader->biBitCount * infoHeader->biWidth + 31) / 32) * 4;
+void turnToGrayscale(BMP* bitmap) {
+    BYTE *ptr = bitmap->pixels;
+    for (int i = 0; i < bitmap->infoHeader->biWidth * bitmap->infoHeader->biHeight; i++)
+    {
+        PIXEL pixel;
+        memcpy(&pixel, ptr, sizeof(PIXEL));
+        PIXEL newPixel = pixelToGray(pixel); 
+        memcpy(ptr, &newPixel, sizeof(PIXEL));
+       
+        ptr += sizeof(PIXEL);
+    }
+}
 
-//     BYTE* buffer = (BYTE*)malloc(sizeof(BYTE)*lineSize);
-
-//     for(int i = 0; i < infoHeader->biHeight; i++) {
-//         fread(buffer, sizeof(BYTE), lineSize, in);
-
-//         // for(int i = 0; i < infoHeader->biWidth; i++) {
-//         //     BYTE gray = (BYTE)((buffer[i*3] + buffer[i*3+1] + buffer[i*3+2]) / 3);
-//         //     buffer[i*3] = buffer[i*3+1] = buffer[i*3+2] = gray;
-//         // }
-//         fwrite(buffer, sizeof(BYTE), lineSize, out);
-//     }
-//     free(buffer);
-// }
+PIXEL pixelToGray(PIXEL pixel) {
+    PIXEL newPixel;
+    newPixel.r = newPixel.g = newPixel.b = (pixel.r + pixel.g + pixel.b) / 3;
+    return newPixel;
+}

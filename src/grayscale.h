@@ -3,6 +3,7 @@
 #include "utils.h"
 
 int grayscaleProgram(char *inFilename, char *outFilename);
-void fillGrayscale(LPBITMAPINFOHEADER infoHeader, FILE *in, FILE *out);
+void turnToGrayscale(BMP* bitmap);
+PIXEL pixelToGray(PIXEL pixel);
 
 #endif
