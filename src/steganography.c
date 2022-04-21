@@ -1,9 +1,51 @@
 #include "steganography.h"
 
 int decodeSteganography(char* file) {
-    printf("READ");
+    FILE *in = fopen(file, "rb");
+    if (in == NULL)
+    {
+        printf("Error opening input file!");
+        return FILE_NOT_FOUND;
+    }
+
+    // READ BITMAP
+    BMP *bitmap = (BMP *)malloc(sizeof(BMP));
+    readBitmap(in, bitmap);
+
+    decodeMessage(bitmap);
+
+    // CLEANUP
+    freeBitmap(bitmap);
+    fclose(in);
+
     return 0;
 }
+
+void decodeMessage(BMP* bitmap) {
+    int l = decodeChar(bitmap->pixels, 0);
+    char* message = (char*)malloc(sizeof(char) * l + 1);
+    for(int i = 0; i < l; i++) {
+        message[i] = decodeChar(bitmap->pixels, (i+1)*8);
+    }
+    message[l] = '\0';
+    printf("%s\n", message);
+    free(message);
+}
+
+char decodeChar(BYTE* buffer, int index) {
+    char c = 0;
+
+    int mask = 0xFE;
+    char bit;
+
+    for(int i = 0; i < 8; i++) {
+        c = c << 1;
+        bit = buffer[index+7-i] & 1;
+        c += bit;
+    }
+    return c;
+}
+
 
 int encodeSteganography(char* inFilename, char* outFilename, char* message) {
     FILE *in = fopen(inFilename, "rb");
