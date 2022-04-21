@@ -33,20 +33,23 @@ int grayscaleProgram(char *inFilename, char *outFilename)
     return 0;
 }
 
-void turnToGrayscale(BMP* bitmap) {
-    BYTE *ptr = bitmap->pixels;;
+void turnToGrayscale(BMP *bitmap)
+{
+    BYTE *ptr = bitmap->pixels;
+    ;
     for (int i = 0; i < bitmap->infoHeader->biWidth * bitmap->infoHeader->biHeight; i++)
     {
         PIXEL pixel;
         memcpy(&pixel, ptr, sizeof(PIXEL));
-        pixel = pixelToGray(pixel); 
+        pixel = pixelToGray(pixel);
         memcpy(ptr, &pixel, sizeof(PIXEL));
-       
+
         ptr += sizeof(PIXEL);
     }
 }
 
-PIXEL pixelToGray(PIXEL pixel) {
+PIXEL pixelToGray(PIXEL pixel)
+{
     PIXEL newPixel;
     newPixel.r = newPixel.g = newPixel.b = (pixel.r + pixel.g + pixel.b) / 3;
     return newPixel;
