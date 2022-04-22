@@ -19,7 +19,7 @@ int decodeSteganography(char *file)
     freeBitmap(bitmap);
     fclose(in);
 
-    return 0;
+    return EXIT_SUCCESS;
 }
 
 void decodeMessage(BMP *bitmap)
@@ -80,7 +80,7 @@ int encodeSteganography(char *inFilename, char *outFilename, char *message)
     freeBitmap(bitmap);
     fclose(in);
     fclose(out);
-    return 0;
+    return EXIT_SUCCESS;
 }
 
 void encodeMessage(BMP *bitmap, char *message)

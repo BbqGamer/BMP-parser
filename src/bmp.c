@@ -34,5 +34,5 @@ int main(int argc, char *argv[])
         return WRONG_NUMBER_OF_ARGUMENTS;
     }
 
-    return 0;
+    return EXIT_FAILURE;
 }

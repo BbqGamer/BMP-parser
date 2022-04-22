@@ -9,7 +9,7 @@
 
 #define NUM_COLORS 3
 
-// ERROR CODES
+//STATUS CODES
 #define FILE_NOT_FOUND -1
 
 // STRUCTURES
@@ -28,9 +28,7 @@ typedef struct tagBITMAPFILEHEADER
     WORD bfReserved2;
     DWORD bfOffBits;
 } BITMAPFILEHEADER, *LPBITMAPFILEHEADER, *PBITMAPFILEHEADER;
-#pragma pack(pop)
 
-#pragma pack(push, 1)
 // https://docs.microsoft.com/pl-pl/previous-versions/dd183376(v=vs.85)
 typedef struct tagBITMAPINFOHEADER
 {

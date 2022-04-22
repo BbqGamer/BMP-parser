@@ -26,6 +26,8 @@ int histProgram(char *filename)
     freeCounter(c);
     freeBitmap(bitmap);
     fclose(file);
+
+    return EXIT_SUCCESS;
 }
 
 COLOR_COUNT *counterInit(void)

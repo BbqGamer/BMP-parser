@@ -30,7 +30,7 @@ int grayscaleProgram(char *inFilename, char *outFilename)
     freeBitmap(bitmap);
     fclose(in);
     fclose(out);
-    return 0;
+    return EXIT_SUCCESS;
 }
 
 void turnToGrayscale(BMP *bitmap)
